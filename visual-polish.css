@@ -3,7 +3,7 @@
 .ticker{position:relative;padding:19px 0;border-top:1px solid rgba(255,255,255,.15);border-bottom:1px solid rgba(255,255,255,.15);background:linear-gradient(105deg,#58613f,#778254 48%,#58613f);box-shadow:0 14px 35px rgba(48,55,33,.13)}
 .ticker:before,.ticker:after{content:"";position:absolute;z-index:2;top:0;bottom:0;width:54px;pointer-events:none}
 .ticker:before{left:0;background:linear-gradient(90deg,#58613f,transparent)}.ticker:after{right:0;background:linear-gradient(270deg,#58613f,transparent)}
-.ticker-track{width:max-content;display:flex;justify-content:flex-start;align-items:center;gap:46px;padding-left:28px;will-change:transform;animation:coffee-marquee 54s linear infinite}
+.ticker-track{width:max-content;display:flex;justify-content:flex-start;align-items:center;gap:0;padding-left:0;will-change:transform;animation:coffee-marquee 54s linear infinite}.ticker-group{display:flex;align-items:center;gap:46px;padding:0 23px;flex:none}
 .ticker-track span{font-size:13px;letter-spacing:.18em;gap:24px}.ticker-track b{color:#f3c7a6;font-size:22px;font-weight:500}
 .ticker:hover .ticker-track{animation-play-state:paused}
 @keyframes coffee-marquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
@@ -27,5 +27,5 @@
 footer{position:relative}footer:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--tomato),#e6b07f,var(--olive))}
 .food-stage{box-shadow:0 30px 90px rgba(48,38,25,.17),inset 0 0 0 1px #fff8}
 .food-info{position:relative}.food-info:before{content:"";position:absolute;z-index:-1;left:-28px;top:0;width:210px;height:210px;border-radius:50%;background:radial-gradient(circle,#e5d7c222,transparent 70%)}
-@media(max-width:700px){.ticker-track{gap:30px;animation-duration:44s}.ticker:before,.ticker:after{width:24px}.section-head:after{display:none}.hero:before{display:none}}
+@media(max-width:700px){.ticker-group{gap:30px;padding:0 15px}.ticker-track{animation-duration:50s}.ticker:before,.ticker:after{width:24px}.section-head:after{display:none}.hero:before{display:none}}
 @media(prefers-reduced-motion:reduce){.ticker-track{animation:none!important;transform:none!important}}
