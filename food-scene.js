@@ -1,12 +1,6 @@
 // Resilient 3D food showcase. Try multiple public ESM CDNs so one blocked host does not blank the scene.
+// No external 3D library or CDN is required; the built-in renderer below is used.
 let THREE;
-const moduleSources=[
- 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js',
- 'https://unpkg.com/three@0.160.0/build/three.module.js',
- 'https://esm.sh/three@0.160.0'
-];
-let importError;
-for(const source of moduleSources){try{THREE=await import(source);break;}catch(error){importError=error;}}
 const root=document.querySelector('[data-food-scene]');
 if(root){
  const status=root.querySelector('[data-scene-status]');
@@ -57,7 +51,7 @@ if(root){
     function draw(){const w=canvas.width,h=canvas.height,d=Math.min(devicePixelRatio||1,1.5);ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,w,h);ctx.save();ctx.scale(d,d);const cw=w/d,ch=h/d,cx=cw/2,cy=ch*.52,scale=Math.min(cw/420,ch/430,1.2);ctx.translate(cx,cy);ctx.scale(scale,scale);
       const glow=ctx.createRadialGradient(0,0,20,0,0,240);glow.addColorStop(0,'#fff9e9');glow.addColorStop(1,'#d9c5a500');ellipse(0,25,230,245,glow);ellipse(0,170,135,25,'#79604422');
       if(active===0)drawShawarma(0,0);else if(active===1)drawCoffee(0,0);else drawFries(0,0);
-      ctx.restore();angle+=drag?0:.006;requestAnimationFrame(draw);}
+      ctx.restore();angle+=drag?0:.003;requestAnimationFrame(draw);}
     function setProduct(i){active=(i+products.length)%products.length;root.querySelectorAll('[data-product]').forEach((b,n)=>{b.classList.toggle('is-active',n===active);b.setAttribute('aria-pressed',String(n===active));});root.querySelector('[data-product-name]').textContent=products[active].name;root.querySelector('[data-product-description]').textContent=products[active].desc;}
     root.querySelectorAll('[data-product]').forEach((b,i)=>b.addEventListener('click',()=>setProduct(i)));
     root.querySelector('[data-prev]').addEventListener('click',()=>setProduct(active-1));root.querySelector('[data-next]').addEventListener('click',()=>setProduct(active+1));
