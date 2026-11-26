@@ -11,7 +11,62 @@ const root=document.querySelector('[data-food-scene]');
 if(root){
  const status=root.querySelector('[data-scene-status]');
  const showError=message=>{if(status){status.hidden=false;status.innerHTML='Не удалось загрузить 3D-модель.<span>'+message+'</span>';status.style.color='#9b3829';}};
- if(!THREE){showError('Браузер не смог получить библиотеку Three.js с CDN. Откройте страницу через интернет и обновите её.');console.error('Three.js import failed',importError);}
+ if(!THREE){
+  // Offline-safe illustrated 3D fallback: works even when every external CDN is blocked.
+  const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d');
+  if(!ctx){showError('Браузер не смог создать графическую сцену.');}
+  else{
+    const products=[{name:'Шаурма',desc:'Объёмная демонстрационная модель шаурмы.'},{name:'Капучино',desc:'Объёмная демонстрационная модель чашки кофе.'},{name:'Картофель фри',desc:'Объёмная демонстрационная модель картофеля фри.'}];
+    let active=0,angle=0,drag=false,lastX=0;
+    function resize(){const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.max(1,Math.round(r.width*d));canvas.height=Math.max(1,Math.round(r.height*d));}
+    if('ResizeObserver'in window)new ResizeObserver(resize).observe(canvas);else addEventListener('resize',resize);resize();
+    function ellipse(x,y,rx,ry,fill){ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();}
+    function rounded(x,y,w,h,r,fill){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();}
+    function drawShawarma(cx,cy,scale){
+      ctx.save();ctx.translate(cx,cy);ctx.rotate(Math.sin(angle)*.18);
+      ctx.shadowColor='#59412a55';ctx.shadowBlur=28;ctx.shadowOffsetY=20;
+      const wrap=ctx.createLinearGradient(-90,0,90,0);wrap.addColorStop(0,'#a85e2d');wrap.addColorStop(.22,'#f1c77f');wrap.addColorStop(.65,'#dca45b');wrap.addColorStop(1,'#92502a');
+      ctx.beginPath();ctx.moveTo(-92,-142);ctx.quadraticCurveTo(-78,-168,0,-162);ctx.quadraticCurveTo(84,-165,94,-130);ctx.lineTo(72,137);ctx.quadraticCurveTo(0,177,-76,132);ctx.closePath();ctx.fillStyle=wrap;ctx.fill();
+      ctx.shadowColor='transparent';ctx.fillStyle='#f7d99a';ctx.beginPath();ctx.ellipse(0,-143,88,23,0,0,Math.PI*2);ctx.fill();
+      for(let i=0;i<18;i++){const x=Math.sin(i*12.7)*58,y=-143+(i%4)*13;ctx.fillStyle=['#6c8c42','#bd4932','#f2e8c9','#8b542e'][i%4];ctx.beginPath();ctx.ellipse(x,y,10,5,Math.sin(i)*.6,0,Math.PI*2);ctx.fill();}
+      ctx.strokeStyle='#9c5a2c';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(-72,-85);ctx.quadraticCurveTo(-25,-55,62,-75);ctx.stroke();
+      ctx.restore();
+    }
+    function drawCoffee(cx,cy){
+      ctx.save();ctx.translate(cx,cy);ctx.rotate(Math.sin(angle)*.12);
+      ctx.shadowColor='#59412a55';ctx.shadowBlur=25;ctx.shadowOffsetY=18;
+      const cup=ctx.createLinearGradient(-75,0,75,0);cup.addColorStop(0,'#b9a58a');cup.addColorStop(.22,'#fff8e9');cup.addColorStop(.72,'#e9dcc6');cup.addColorStop(1,'#a18c70');
+      ctx.beginPath();ctx.moveTo(-70,-95);ctx.lineTo(-53,115);ctx.quadraticCurveTo(0,137,53,115);ctx.lineTo(70,-95);ctx.closePath();ctx.fillStyle=cup;ctx.fill();
+      ctx.shadowColor='transparent';ctx.strokeStyle='#fff9ed';ctx.lineWidth=15;ctx.beginPath();ctx.ellipse(0,-93,72,17,0,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle='#4b281b';ctx.beginPath();ctx.ellipse(0,-93,58,12,0,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#d9a46c';ctx.lineWidth=5;ctx.beginPath();ctx.arc(-5,-94,20,0,Math.PI*2);ctx.stroke();
+      ctx.strokeStyle='#f8f0df';ctx.lineWidth=17;ctx.beginPath();ctx.ellipse(68,-6,32,43,-.1,-1.2,1.2);ctx.stroke();
+      ctx.fillStyle='#d8c5a9';ctx.beginPath();ctx.ellipse(0,124,83,18,0,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+      ctx.save();ctx.strokeStyle='#fff8e8aa';ctx.lineWidth=5;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(-35+i*35,-150);ctx.bezierCurveTo(-55+i*35,-190,-5+i*35,-190,-25+i*35,-225);ctx.stroke();}ctx.restore();
+    }
+    function drawFries(cx,cy){
+      ctx.save();ctx.translate(cx,cy);ctx.rotate(Math.sin(angle)*.16);
+      ctx.shadowColor='#59412a55';ctx.shadowBlur=25;ctx.shadowOffsetY=18;
+      const box=ctx.createLinearGradient(-80,0,80,0);box.addColorStop(0,'#8e2922');box.addColorStop(.5,'#e14b36');box.addColorStop(1,'#a62f27');
+      ctx.beginPath();ctx.moveTo(-90,-65);ctx.lineTo(-60,125);ctx.quadraticCurveTo(0,150,60,125);ctx.lineTo(90,-65);ctx.closePath();ctx.fillStyle=box;ctx.fill();
+      ctx.shadowColor='transparent';
+      for(let i=0;i<13;i++){const x=-67+i*11,y=-155+(i%4)*12;ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(i*8)*.16);const fry=ctx.createLinearGradient(-7,0,8,0);fry.addColorStop(0,'#b8742e');fry.addColorStop(.35,'#ffd77c');fry.addColorStop(1,'#d99a43');rounded(-7,0,14,145-(i%3)*10,7,fry);ctx.restore();}
+      ctx.restore();
+    }
+    function draw(){const w=canvas.width,h=canvas.height,d=Math.min(devicePixelRatio||1,1.5);ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,w,h);ctx.save();ctx.scale(d,d);const cw=w/d,ch=h/d,cx=cw/2,cy=ch*.52,scale=Math.min(cw/420,ch/430,1.2);ctx.translate(cx,cy);ctx.scale(scale,scale);
+      const glow=ctx.createRadialGradient(0,0,20,0,0,240);glow.addColorStop(0,'#fff9e9');glow.addColorStop(1,'#d9c5a500');ellipse(0,25,230,245,glow);ellipse(0,170,135,25,'#79604422');
+      if(active===0)drawShawarma(0,0);else if(active===1)drawCoffee(0,0);else drawFries(0,0);
+      ctx.restore();angle+=drag?0:.006;requestAnimationFrame(draw);}
+    function setProduct(i){active=(i+products.length)%products.length;root.querySelectorAll('[data-product]').forEach((b,n)=>{b.classList.toggle('is-active',n===active);b.setAttribute('aria-pressed',String(n===active));});root.querySelector('[data-product-name]').textContent=products[active].name;root.querySelector('[data-product-description]').textContent=products[active].desc;}
+    root.querySelectorAll('[data-product]').forEach((b,i)=>b.addEventListener('click',()=>setProduct(i)));
+    root.querySelector('[data-prev]').addEventListener('click',()=>setProduct(active-1));root.querySelector('[data-next]').addEventListener('click',()=>setProduct(active+1));
+    canvas.addEventListener('pointerdown',e=>{drag=true;lastX=e.clientX;canvas.setPointerCapture(e.pointerId);});
+    canvas.addEventListener('pointermove',e=>{if(drag){angle+=(e.clientX-lastX)*.008;lastX=e.clientX;}});
+    const stop=()=>drag=false;canvas.addEventListener('pointerup',stop);canvas.addEventListener('pointercancel',stop);
+    setProduct(0);if(status)status.hidden=true;draw();
+  }
+}
  else try{
   const canvas=root.querySelector('canvas');
   const scene=new THREE.Scene();scene.background=new THREE.Color('#eadcc7');
