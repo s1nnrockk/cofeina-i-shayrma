@@ -51,7 +51,7 @@ if(root){
     function draw(){const w=canvas.width,h=canvas.height,d=Math.min(devicePixelRatio||1,1.5);ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,w,h);ctx.save();ctx.scale(d,d);const cw=w/d,ch=h/d,cx=cw/2,cy=ch*.52,scale=Math.min(cw/420,ch/430,1.2);ctx.translate(cx,cy);ctx.scale(scale,scale);
       const glow=ctx.createRadialGradient(0,0,20,0,0,240);glow.addColorStop(0,'#fff9e9');glow.addColorStop(1,'#d9c5a500');ellipse(0,25,230,245,glow);ellipse(0,170,135,25,'#79604422');
       if(active===0)drawShawarma(0,0);else if(active===1)drawCoffee(0,0);else drawFries(0,0);
-      ctx.restore();angle+=drag?0:.003;requestAnimationFrame(draw);}
+      ctx.restore();angle+=drag?0:.0015;requestAnimationFrame(draw);}
     function setProduct(i){active=(i+products.length)%products.length;root.querySelectorAll('[data-product]').forEach((b,n)=>{b.classList.toggle('is-active',n===active);b.setAttribute('aria-pressed',String(n===active));});root.querySelector('[data-product-name]').textContent=products[active].name;root.querySelector('[data-product-description]').textContent=products[active].desc;}
     root.querySelectorAll('[data-product]').forEach((b,i)=>b.addEventListener('click',()=>setProduct(i)));
     root.querySelector('[data-prev]').addEventListener('click',()=>setProduct(active-1));root.querySelector('[data-next]').addEventListener('click',()=>setProduct(active+1));
