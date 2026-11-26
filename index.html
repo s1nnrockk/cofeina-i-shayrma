@@ -34,7 +34,7 @@
   <header>
     <div class="wrap nav">
       <a class="brand" href="#top" aria-label="На главную"><span class="brandmark">✳</span><span>КОФЕЙНЯ<br><small>и шаурма · Уфа</small></span></a>
-      <nav class="links" aria-label="Основная навигация"><a href="#menu">Что у нас</a><a href="#about">О месте</a><a href="#contacts">Контакты</a></nav>
+      <nav class="links" aria-label="Основная навигация"><a href="menu.html">Меню</a><a href="about.html">О месте</a><a href="contacts.html">Контакты</a></nav>
       <a class="nav-cta" href="tel:+79373007747">Позвонить ↗</a>
     </div>
   </header>
@@ -87,10 +87,11 @@
     </section>
     <div class="final-cta"><div class="wrap"><div class="cta-panel reveal"><div><h2>Будем рады видеть вас!</h2><p>Позвоните, чтобы уточнить меню и детали заказа.</p></div><a class="btn" href="tel:+79373007747">+7 (937) 300-77-47 ↗</a></div></div></div>
   </main>
-  <footer><div class="wrap footer-row"><div class="footer-brand">КОФЕЙНЯ И ШАУРМА · УФА</div><div>Дагестанская, 25А · <a href="tel:+79373007747">+7 (937) 300-77-47</a></div><div>© <span id="year"></span></div></div></footer>
+  <footer><div class="wrap footer-row"><div class="footer-brand">КОФЕЙНЯ И ШАУРМА · УФА</div><div>Дагестанская, 25А · <a href="tel:+79373007747">+7 (937) 300-77-47</a></div><div><a href="menu.html">Меню</a> · <a href="about.html">О месте</a> · <a href="contacts.html">Контакты</a></div><div>© <span id="year"></span></div></div></footer>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
-    const observer = new IntersectionObserver(entries => entries.forEach(entry => { if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}),{threshold:.12});
+    if (!('IntersectionObserver' in window)) document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
+    const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => entries.forEach(entry => { if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}),{threshold:.12});
     document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
   </script>
 </body>
